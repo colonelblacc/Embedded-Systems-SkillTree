@@ -4,21 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Embedded Systems Skill Tree</title>
-    <!-- Use FontAwesome for the icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-page: #f5f5f5;
             --paper: #ffffff;
             --ink: #000000;
-            --fill-color: #61dafb; /* Bright blue for checked off boxes */
-            
-            /* Hexagon Geometry */
+            --fill-color: #61dafb;
             --hex-w: 130px;
-            --hex-h: 150px; /* Width * 1.1547 for pointy top */
-            --hex-spacing-x: 97.5px; /* Width * 0.75 */
-            --hex-spacing-y: 150px; /* Height */
-            
+            --hex-h: 150px;
             --border-width: 3px;
         }
 
@@ -33,13 +27,12 @@
             overflow-x: hidden;
         }
 
-        /* Responsive Wrapper */
         .zoom-wrapper {
             width: 100%;
             max-width: 1400px;
             display: flex;
             justify-content: center;
-            overflow-x: auto; /* Allow horizontal scroll on very small screens */
+            overflow-x: auto;
             padding-bottom: 20px;
         }
 
@@ -49,442 +42,111 @@
             padding: 40px;
             position: relative;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            /* Fixed internal size to ensure perfect geometric rendering */
             width: 1150px; 
             min-width: 1150px;
-            transform-origin: top left;
         }
 
-        /* --- Header Styles --- */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-        }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 4rem; text-transform: uppercase; font-weight: 900; color: var(--ink); margin-bottom: 10px; }
+        .header-sub { display: inline-block; background: var(--ink); color: var(--paper); padding: 5px 15px; font-size: 1.5rem; font-weight: bold; }
 
-        .header h1 {
-            font-size: 4rem;
-            text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: var(--ink);
-            margin-bottom: 10px;
-        }
-
-        .header-sub {
-            display: inline-block;
-            background: var(--ink);
-            color: var(--paper);
-            padding: 5px 15px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .header-desc {
-            font-size: 1rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .header-icon-left, .header-icon-right {
-            position: absolute;
-            top: 0;
-            font-size: 5rem;
-            color: var(--ink);
-        }
-        .header-icon-left { left: 20px; }
-        .header-icon-right { right: 20px; }
-
-        /* --- Sidebar Arrow --- */
-        .arrow-container {
-            position: absolute;
-            left: 20px;
-            top: 250px;
-            height: 1250px;
-            width: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .arrow-head {
-            width: 0; height: 0; 
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-bottom: 30px solid var(--ink);
-        }
-
-        .arrow-body {
-            width: 20px;
-            flex-grow: 1;
-            background: linear-gradient(to bottom, #000 0%, #ccc 100%);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 40px 0;
-        }
-
-        .arrow-text {
-            color: white;
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-            text-shadow: 0 0 5px rgba(0,0,0,0.8);
-        }
-
-        .arrow-base {
-            width: 0; height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 30px solid #ccc;
-        }
-
-        /* --- Hexagon Grid System --- */
-        .grid-container {
-            position: relative;
-            width: 1000px;
-            height: 1550px;
-            margin-left: 80px; /* Room for the arrow */
-        }
-
-        .hex-wrap {
-            position: absolute;
-            width: var(--hex-w);
-            height: var(--hex-h);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            background: var(--ink);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        .hex-inner {
-            width: calc(var(--hex-w) - (var(--border-width) * 2));
-            height: calc(var(--hex-h) - (var(--border-width) * 2));
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            background: var(--paper);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 5px;
-            text-align: center;
-            transition: background 0.2s;
-        }
-
+        .grid-container { position: relative; width: 1000px; height: 1550px; margin-left: 80px; }
+        .hex-wrap { position: absolute; width: var(--hex-w); height: var(--hex-h); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s ease; }
+        .hex-inner { width: calc(var(--hex-w) - (var(--border-width) * 2)); height: calc(var(--hex-h) - (var(--border-width) * 2)); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: var(--paper); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 5px; text-align: center; transition: background 0.2s; }
         .hex-wrap:hover { transform: scale(1.05); z-index: 10; }
-        .hex-wrap:active { transform: scale(0.95); }
         .hex-wrap.completed .hex-inner { background: var(--fill-color); }
+        .hex-text { font-size: 0.65rem; font-weight: 700; line-height: 1.1; color: var(--ink); pointer-events: none; margin-bottom: 5px; }
 
-        .hex-text {
-            font-size: 0.65rem;
-            font-weight: 700;
-            line-height: 1.1;
-            color: var(--ink);
-            pointer-events: none;
-            margin-bottom: 5px;
-        }
-
-        .hex-icon {
-            font-size: 1.2rem;
-            color: var(--ink);
-            pointer-events: none;
-        }
-
-        /* Special Goal Hexes */
-        .hex-goal .hex-inner {
-            border: 2px dashed #999;
-            background: #fafafa;
-        }
-        .hex-goal .hex-text {
-            color: #777;
-            font-style: italic;
-        }
-
-        /* --- Footer & Start Marker --- */
-        .start-marker {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: 900;
-        }
-        .start-dash {
-            height: 40px;
-            border-left: 10px dashed var(--ink);
-            margin: 0 15px;
-            transform: skew(-15deg);
-        }
-
-        .footer {
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-top: 2px solid var(--ink);
-            padding-top: 10px;
-        }
-
-        .footer-credits {
-            background: var(--ink);
-            color: white;
-            padding: 5px 20px;
-            font-weight: bold;
-        }
-
-        .score-box {
-            border: 4px solid var(--ink);
-            border-radius: 10px;
-            overflow: hidden;
-            text-align: center;
-            width: 200px;
-        }
-        .score-header {
-            background: var(--ink);
-            color: white;
-            padding: 5px;
-            font-weight: bold;
-        }
-        .score-val {
-            font-size: 2rem;
-            font-weight: 900;
-            padding: 10px;
-        }
-
-        /* Scale entire board down for smaller screens seamlessly */
-        @media (max-width: 1200px) { .poster { transform: scale(0.85); margin: -5% -7.5%; } }
-        @media (max-width: 900px) { .poster { transform: scale(0.65); margin: -15% -17.5%; } }
-        @media (max-width: 600px) { .poster { transform: scale(0.45); margin: -30% -27.5%; } }
+        .footer { margin-top: 50px; display: flex; justify-content: space-between; align-items: flex-end; border-top: 2px solid var(--ink); padding-top: 15px; }
+        #username { border: none; border-bottom: 2px solid var(--ink); background: transparent; font-size: 1.2rem; font-weight: bold; margin-left: 10px; width: 250px; outline: none; }
+        .sync-panel { background: #f0f0f0; border: 2px solid #ccc; padding: 8px 15px; border-radius: 5px; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        #syncIdInput { width: 70px; font-weight: bold; text-align: center; border: 1px solid #aaa; border-radius: 3px; padding: 3px; }
+        #syncBtn { background: var(--ink); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
     </style>
 </head>
 <body>
-
     <div class="zoom-wrapper">
         <div class="poster">
-            
-            <div class="header">
-                <i class="fa-solid fa-microchip header-icon-left"></i>
-                <h1>Embedded Systems</h1>
-                <div class="header-sub">Skill Tree: Color in the Boxes</div>
-                <p class="header-desc">Color in the boxes of anything you've already completed, visualize your skills and identify your skill gaps. Get inspired to try new things and tailor the skill tree to suit your own journey by swapping in your own goals.</p>
-                <i class="fa-solid fa-square-poll-vertical header-icon-right"></i>
-            </div>
-
-            <div class="arrow-container">
-                <div class="arrow-head"></div>
-                <div class="arrow-body">
-                    <span class="arrow-text">ADVANCED</span>
-                    <span class="arrow-text" style="color: #111;">BASICS</span>
-                </div>
-                <div class="arrow-base"></div>
-            </div>
-
-            <div class="grid-container" id="grid">
-                <!-- Javascript will inject hexagons perfectly positioned -->
-            </div>
-
-            <div class="start-marker">
-                START <div class="start-dash"></div> HERE
-            </div>
-
+            <div class="header"><h1>Embedded Systems</h1><div class="header-sub">Skill Tree</div></div>
+            <div class="grid-container" id="grid"></div>
             <div class="footer">
-                <div>Name: ______________________</div>
-                <div class="footer-credits">MADE BY embedded.fm AND STEPH PIPER - MAKERQUEEN AU</div>
-                <div class="score-box">
-                    <div class="score-header">Total Score</div>
-                    <div class="score-val"><span id="score">0</span> / <span id="total">0</span></div>
+                <div class="footer-left">
+                    <div>Name: <input type="text" id="username" placeholder="Type here..."></div>
+                    <div class="sync-panel">
+                        <span id="connectionStatus">Syncing...</span>
+                        Sync ID: <input type="text" id="syncIdInput" maxlength="6">
+                        <button id="syncBtn">Load</button>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <script>
-        /*
-          Pointy-Topped Hex Grid Coordinate System.
-          Col = X axis. Row = Y axis.
-          Even columns (0, 2, 4...) are physically shifted DOWN by half a hexagon height.
-          Odd columns (1, 3, 5...) are aligned normally.
-        */
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCoRF9ocNSBioKic-I2DJ7aEtPssDg0E7w",
+            authDomain: "embeddedskilltree.firebaseapp.com",
+            projectId: "embeddedskilltree",
+            storageBucket: "embeddedskilltree.firebasestorage.app",
+            messagingSenderId: "882992766556",
+            appId: "1:882992766556:web:2cd846309e8af0a3f35099"
+        };
+
+        const fbApp = initializeApp(firebaseConfig);
+        const auth = getAuth(fbApp);
+        const db = getFirestore(fbApp);
+        const appId = "embeddedskilltree";
+
         const hexMap = [
-            // Column 0 (Even, Shifted Down)
-            { c: 0, r: 1, text: "Trace debugging to troubleshoot a problem", icon: "fa-desktop" },
-            { c: 0, r: 2, text: "Use multiple architectures in a software image", icon: "fa-network-wired" },
-            { c: 0, r: 3, text: "Use an IMU sensor to track motion in multiple axes", icon: "fa-arrows-to-dot" },
-            { c: 0, r: 4, text: "Analyze a signal with Fast Fourier Transform (FFT)", icon: "fa-wave-square" },
-            { c: 0, r: 5, text: "Convert a signal from analog to digital (ADC)", icon: "fa-chart-line" },
-            
-            // Column 1 (Odd)
-            { c: 1, r: 0, text: "Set your own goal!", icon: "", isGoal: true },
-            { c: 1, r: 1, text: "Write a datasheet", icon: "fa-file-lines" },
-            { c: 1, r: 2, text: "Bit bang a communication driver", icon: "fa-exclamation-triangle" },
-            { c: 1, r: 3, text: "Use Direct Memory Access (DMA)", icon: "fa-microchip" },
-            { c: 1, r: 4, text: "Create a circular buffer that uses more than 2 pointers", icon: "fa-circle-notch" },
-            { c: 1, r: 5, text: "Understand how to use a circular buffer", icon: "fa-spinner" },
-
-            // Column 2 (Even, Shifted Down)
-            { c: 2, r: 1, text: "Create a software release process", icon: "fa-cloud-arrow-up" },
-            { c: 2, r: 2, text: "Teach a class on embedded systems", icon: "fa-person-chalkboard" },
-            { c: 2, r: 3, text: "Reverse engineer a communication protocol", icon: "fa-gears" },
-            { c: 2, r: 4, text: "Use a camera in a project", icon: "fa-camera" },
-            { c: 2, r: 5, text: "Configure a timer", icon: "fa-stopwatch" },
-            { c: 2, r: 6, text: "Use I2C communication", icon: "fa-circle-nodes" },
-            { c: 2, r: 7, text: "Use REPL in MicroPython to blink an LED", icon: "fa-python" },
-
-            // Column 3 (Odd)
-            { c: 3, r: 0, text: "Set your own goal!", icon: "", isGoal: true },
-            { c: 3, r: 1, text: "Create a CI/CD System", icon: "fa-rocket" },
-            { c: 3, r: 2, text: "Make a dashboard for monitoring remote units", icon: "fa-chart-pie" },
-            { c: 3, r: 3, text: "Use a .map file to debug a crash", icon: "fa-map" },
-            { c: 3, r: 4, text: "Debug a hard fault on a microcontroller", icon: "fa-bug" },
-            { c: 3, r: 5, text: "Implement MCU sleep in a low power project", icon: "fa-bed" },
-            { c: 3, r: 6, text: "Use a step-through debugger to troubleshoot a problem", icon: "fa-magnifying-glass" },
-            { c: 3, r: 7, text: "Send data to the cloud", icon: "fa-cloud" },
-            { c: 3, r: 8, text: "Use UART serial communication", icon: "fa-arrow-right-arrow-left" },
-            { c: 3, r: 9, text: "Get an Arduino", icon: "fa-wand-magic-sparkles" },
-
-            // Column 4 (Even, Shifted Down)
-            { c: 4, r: 0, text: "Edit binary / hex to fix a problem after release", icon: "fa-pen" },
-            { c: 4, r: 1, text: "Write custom BLE GATT to communicate between devices", icon: "fa-bluetooth-b" },
-            { c: 4, r: 2, text: "Blow fuses to test security in a project", icon: "fa-fire" },
-            { c: 4, r: 3, text: "Update firmware remotely using secure encryption", icon: "fa-lock" },
-            { c: 4, r: 4, text: "Update firmware remotely (OTA, WiFi, BLE)", icon: "fa-wifi" },
-            { c: 4, r: 5, text: "Use Bluetooth Low Energy (BLE) to show a sensor value", icon: "fa-bluetooth" },
-            { c: 4, r: 6, text: "Blink an LED", icon: "fa-lightbulb" },
-
-            // Column 5 (Odd)
-            { c: 5, r: 0, text: "Set your own goal!", icon: "", isGoal: true },
-            { c: 5, r: 1, text: "Write an Arduino Library", icon: "fa-book" },
-            { c: 5, r: 2, text: "Write software for programming and testing many boards", icon: "fa-spider" },
-            { c: 5, r: 3, text: "Adapt RTOS to a new board", icon: "fa-check-to-slot" },
-            { c: 5, r: 4, text: "Run unit tests in an algorithm sandbox", icon: "fa-box-open" },
-            { c: 5, r: 5, text: "Create a custom USB/HID Device", icon: "fa-usb" },
-            { c: 5, r: 6, text: "Use pulse width modulation (PWM) to control RGB LEDs", icon: "fa-rainbow" },
-            { c: 5, r: 7, text: "Use Pulse Width Modulation (PWM)", icon: "fa-signal" },
-            { c: 5, r: 8, text: "Use SPI to send/receive data", icon: "fa-ellipsis-h" },
-
-            // Column 6 (Even, Shifted Down)
-            { c: 6, r: 0, text: "Design a low current circuit to monitor lithium battery usage", icon: "fa-battery-half" },
-            { c: 6, r: 1, text: "Use a multicore processor", icon: "fa-cubes" },
-            { c: 6, r: 2, text: "Modify a Linker File", icon: "fa-link" },
-            { c: 6, r: 3, text: "Bring up a custom board for the first time", icon: "fa-cake-candles" },
-            { c: 6, r: 4, text: "Display text on a screen in a different font", icon: "fa-font" },
-            { c: 6, r: 5, text: "Move a motor", icon: "fa-car-battery" },
-            { c: 6, r: 6, text: "Debounce a button", icon: "fa-hand-pointer" },
-            { c: 6, r: 7, text: "Use a Hardware Simulator (eg. WokWi)", icon: "fa-laptop-code" },
-
-            // Column 7 (Odd)
-            { c: 7, r: 0, text: "Set your own goal!", icon: "", isGoal: true },
-            { c: 7, r: 1, text: "Fix 49-day reboot problem with a calendar", icon: "fa-calendar-days" },
-            { c: 7, r: 2, text: "Optimize assembly code", icon: "fa-code" },
-            { c: 7, r: 3, text: "Write manufacturing test software", icon: "fa-clipboard-check" },
-            { c: 7, r: 4, text: "Set up a cross compiler", icon: "fa-screwdriver-wrench" },
-            { c: 7, r: 5, text: "Use closed loop control (PID) to regulate a project", icon: "fa-arrows-spin" },
-            { c: 7, r: 6, text: "Implement a state machine", icon: "fa-robot" },
-            { c: 7, r: 7, text: "Commit to a version control system (such as Github)", icon: "fa-code-branch" },
-            { c: 7, r: 8, text: "Solder in your own header pins", icon: "fa-plug" },
-
-            // Column 8 (Even, Shifted Down)
-            { c: 8, r: 0, text: "Add Machine Learning (ML) to a device", icon: "fa-brain" },
-            { c: 8, r: 1, text: "Create your own custom PCB", icon: "fa-sim-card" },
-            { c: 8, r: 2, text: "Debug a project with a logic analyzer", icon: "fa-chart-column" },
-            { c: 8, r: 3, text: "Identify a brownout voltage issue", icon: "fa-bolt-lightning" },
-            { c: 8, r: 4, text: "Check a list or .map file to troubleshoot a problem", icon: "fa-list-check" },
-            { c: 8, r: 5, text: "Use a Real Time Operating System (RTOS)", icon: "fa-cube" },
-            { c: 8, r: 6, text: "Implement an interrupt service routine (ISR)", icon: "fa-bolt" },
-            { c: 8, r: 7, text: "Use continuity check on a Multimeter (beepy mode)", icon: "fa-wave-square" },
-
-            // Column 9 (Odd, Rightmost edge)
-            { c: 9, r: 3, text: "Debug a project with an oscilloscope", icon: "fa-signature" },
-            { c: 9, r: 4, text: "Use a mutex to safeguard a resource", icon: "fa-handshake" },
-            { c: 9, r: 5, text: "Erase and rewrite FLASH memory", icon: "fa-memory" }
+            { c: 0, r: 1, text: "Trace debugging" },
+            { c: 3, r: 9, text: "Get an Arduino" }
         ];
 
         const grid = document.getElementById('grid');
-        const scoreEl = document.getElementById('score');
-        const totalEl = document.getElementById('total');
-        
-        let progress = JSON.parse(localStorage.getItem('embeddedSkills_v3')) || {};
-        let completedCount = 0;
+        const usernameInput = document.getElementById('username');
+        const syncIdInput = document.getElementById('syncIdInput');
+        let appData = { progress: {}, username: '' };
+        let hexElements = {};
 
-        function updateScore() {
-            scoreEl.textContent = completedCount;
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentSyncId = urlParams.get('syncId') || Math.random().toString(36).substring(2, 8).toUpperCase();
+        syncIdInput.value = currentSyncId;
 
-        function toggleHex(id, el) {
-            if (progress[id]) {
-                delete progress[id];
-                el.classList.remove('completed');
-                completedCount--;
-            } else {
-                progress[id] = true;
-                el.classList.add('completed');
-                completedCount++;
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                await signInAnonymously(auth);
+                return;
             }
-            localStorage.setItem('embeddedSkills_v3', JSON.stringify(progress));
-            updateScore();
-        }
-
-        totalEl.textContent = hexMap.length;
-
-        // Constants from CSS
-        const W = 130;
-        const H = 150;
-        const dX = W * 0.75;
-        const dY = H;
-
-        hexMap.forEach((item, index) => {
-            const hexWrap = document.createElement('div');
-            hexWrap.className = 'hex-wrap' + (item.isGoal ? ' hex-goal' : '');
-            
-            // X position is straightforward based on column spacing
-            const leftPos = item.c * dX;
-            
-            // Y position incorporates the odd/even row shifting
-            // Even columns (0, 2, 4...) are shifted down by H/2
-            const shiftDown = (item.c % 2 === 0) ? (H / 2) : 0;
-            const topPos = (item.r * dY) + shiftDown;
-
-            hexWrap.style.left = `${leftPos}px`;
-            hexWrap.style.top = `${topPos}px`;
-
-            const id = `hex_${item.c}_${item.r}`;
-
-            if (progress[id]) {
-                hexWrap.classList.add('completed');
-                completedCount++;
-            }
-
-            const hexInner = document.createElement('div');
-            hexInner.className = 'hex-inner';
-
-            const textEl = document.createElement('div');
-            textEl.className = 'hex-text';
-            textEl.textContent = item.text;
-            hexInner.appendChild(textEl);
-
-            if (item.icon) {
-                const iconEl = document.createElement('i');
-                iconEl.className = `fa-solid ${item.icon} hex-icon`;
-                hexInner.appendChild(iconEl);
-            }
-
-            hexWrap.appendChild(hexInner);
-            hexWrap.addEventListener('click', () => toggleHex(id, hexWrap));
-            grid.appendChild(hexWrap);
+            const syncDocRef = doc(db, 'skilltrees', currentSyncId);
+            onSnapshot(syncDocRef, (s) => {
+                appData = s.exists() ? s.data() : { progress: {}, username: '' };
+                usernameInput.value = appData.username || '';
+                Object.keys(hexElements).forEach(id => {
+                    hexElements[id].className = 'hex-wrap' + (appData.progress[id] ? ' completed' : '');
+                });
+            });
         });
 
-        updateScore();
+        hexMap.forEach((item) => {
+            const hexWrap = document.createElement('div');
+            hexWrap.className = 'hex-wrap';
+            const id = `hex_${item.c}_${item.r}`;
+            hexElements[id] = hexWrap;
+            hexWrap.style.left = `${item.c * 97.5}px`;
+            hexWrap.style.top = `${item.r * 150 + (item.c % 2 === 0 ? 75 : 0)}px`;
+            hexWrap.innerHTML = `<div class="hex-inner"><div class="hex-text">${item.text}</div></div>`;
+            hexWrap.onclick = () => {
+                appData.progress[id] = !appData.progress[id];
+                hexWrap.className = 'hex-wrap' + (appData.progress[id] ? ' completed' : '');
+                setDoc(doc(db, 'skilltrees', currentSyncId), appData, { merge: true }).catch(console.error);
+            };
+            grid.appendChild(hexWrap);
+        });
     </script>
 </body>
 </html>
