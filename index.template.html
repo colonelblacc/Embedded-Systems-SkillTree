@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Systems Skill Tree</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            /* Light Paper Theme matching the PNG */
+            --bg-page: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-hover: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --input-bg: #ffffff;
+            --input-border: rgba(0, 0, 0, 0.12);
+            --accent-color: #03a9f4;
+            --accent-hover: #0288d1;
+            --accent-glow: rgba(3, 169, 244, 0.25);
+            
+            /* SVG elements overrides */
+            --svg-bg: #ffffff;
+            --svg-stroke: #231f20;
+            --svg-text: #1e1e1e;
+            --svg-text-dark: #231f20;
+            --svg-decorations: #231f20;
+            
+            --hex-bg: transparent;
+            --hex-stroke: #231f20;
+            --hex-hover-bg: rgba(3, 169, 244, 0.12);
+            --hex-hover-stroke: #03a9f4;
+            --hex-completed-bg: #03a9f4;
+            --hex-completed-stroke: #0288d1;
+            --hex-completed-glow: rgba(3, 169, 244, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+        }
+
+        /* Dashboard Top Bar Layout */
+        .dashboard-container {
+            width: 100%;
+            max-width: 1150px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        /* Sticky Top Bar Panel */
+        .top-bar-panel {
+            position: sticky;
+            top: 16px;
+            z-index: 100;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Left Header Title */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-section h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .logo-section p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Middle User Control */
+        .sync-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            max-width: 320px;
+            min-width: 240px;
+        }
+
+        .sync-input-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .form-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .status-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 4px;
+            text-transform: none;
+        }
+
+        .status-badge.local {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+        }
+
+        .status-badge.syncing {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #2563eb;
+        }
+
+        .status-badge.synced {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+
+        .status-badge.locked {
+            background-color: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+        }
+
+        .input-control {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        /* Middle-Right Progress Area */
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            max-width: 250px;
+            min-width: 180px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .progress-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .progress-count-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-color);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Right Buttons Section */
+        .actions-section {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: #ffffff;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: var(--text-muted);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.18);
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.18);
+            border-color: #ef4444;
+        }
+
+        /* Interactive SVG Container - scrolls naturally with page */
+        .svg-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+            width: 100%;
+        }
+
+        /* Style only the main skill tree SVG, not Lucide icon SVGs */
+        .svg-container > svg {
+            background-color: var(--svg-bg) !important;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            transform-origin: top center;
+            width: 100%;
+            height: auto;
+            max-width: 1000px;
+        }
+
+        /* Format Lucide icons inside buttons */
+        .btn svg.lucide {
+            display: inline-block;
+            vertical-align: -2px;
+            margin-right: 6px;
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        .cls-12 {
+            pointer-events: all !important;
+            cursor: pointer !important;
+            fill: var(--hex-bg) !important;
+            stroke: var(--hex-stroke) !important;
+            stroke-width: 1.5px !important;
+            transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+        }
+
+        .cls-12:hover {
+            fill: var(--hex-hover-bg) !important;
+            stroke: var(--hex-hover-stroke) !important;
+        }
+
+        .cls-12.completed {
+            fill: var(--hex-completed-bg) !important;
+            stroke: var(--hex-completed-stroke) !important;
+            filter: drop-shadow(0 0 6px var(--hex-completed-glow)) !important;
+        }
+
+        /* Styling text and shapes inside SVG */
+        svg text {
+            fill: var(--svg-text) !important;
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+
+        svg tspan {
+            fill: var(--svg-text) !important;
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+
+        .cls-1, .cls-10, .cls-22, .cls-6 {
+            stroke: var(--svg-stroke) !important;
+        }
+
+        .cls-13, .cls-15, .cls-28, .cls-4 {
+            fill: var(--svg-text) !important;
+        }
+
+        .cls-2, .cls-5 {
+            fill: var(--svg-bg) !important;
+            stroke: var(--svg-stroke) !important;
+        }
+
+        .cls-7 {
+            fill: #000000 !important;
+            stroke: #000000 !important;
+        }
+
+        .cls-11, .cls-16, .cls-22, .cls-23, .cls-3 {
+            fill: var(--svg-text-dark) !important;
+        }
+
+        /* cls-8 is white text ON the black ADVANCED/BASICS arrows — keep it white */
+        .cls-8 {
+            fill: #ffffff !important;
+        }
+
+        /* Force bottom banner quote text to be white on black background */
+        #credits, #credits tspan {
+            fill: #ffffff !important;
+        }
+
+        /* Toast Notification Pop */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .modal-card .modal-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(3, 169, 244, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.6rem;
+        }
+
+        .modal-card h2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .modal-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .modal-card .modal-username {
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-actions .btn {
+            padding: 10px 24px;
+            font-size: 0.85rem;
+            border-radius: 10px;
+        }
+
+        .modal-form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+        
+        .modal-form-group label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .modal-input:focus {
+            border-color: var(--accent-color);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        /* Sync button in top bar */
+        .btn-sync {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .btn-sync:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-sync:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sync-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        
+        <!-- Top Bar Panel -->
+        <header class="top-bar-panel">
+            
+            <!-- Left Info -->
+            <div class="logo-section">
+                <h1>Embedded Systems</h1>
+                <p>Skill Tree Tracker</p>
+            </div>
+            
+            <!-- Middle User Sync Input -->
+            <div class="sync-section">
+                <div class="sync-input-group">
+                    <label class="form-label" for="username">
+                        Username
+                        <span id="syncStatus" class="status-badge local">Offline Session</span>
+                    </label>
+                    <div class="sync-row">
+                        <input type="text" id="username" class="input-control" placeholder="Enter username...">
+                        <button id="syncBtn" class="btn-sync">Enter →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle-Right Progress Area -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-title">Completed Progress</span>
+                    <span id="progressCount" class="progress-count-text">0/73 (0%)</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progressBar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- Right Buttons Section -->
+            <div class="actions-section">
+                <a href="https://github.com/colonelblacc/Embedded-Systems-SkillTree" target="_blank" class="btn btn-secondary" title="Contribute on GitHub">
+                    <svg class="lucide-github" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: -2px; margin-right: 6px;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>Contribute
+                </a>
+                <button id="copyShareBtn" class="btn btn-secondary">🔗 Copy Link</button>
+                <button id="resetBtn" class="btn btn-danger" title="Clear Progress">🗑️ Reset</button>
+            </div>
+
+        </header>
+
+        <!-- Main SVG Viewer -->
+        <main class="svg-container" id="svgContainer">
+            <!-- INSERT_SVG_HERE -->
+        </main>
+
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Share link copied to clipboard!</div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">✨</div>
+            <h2>Create Profile</h2>
+            <p>Set a password to secure your progress for <span id="modalUsername" class="modal-username"></span>.</p>
+            <div class="modal-form-group">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" class="modal-input" placeholder="Min 6 characters...">
+            </div>
+            <div class="modal-form-group">
+                <label for="regConfirmPassword">Confirm Password</label>
+                <input type="password" id="regConfirmPassword" class="modal-input" placeholder="Repeat password...">
+            </div>
+            <div class="modal-actions">
+                <button id="modalCancel" class="btn btn-secondary">Cancel</button>
+                <button id="modalRegister" class="btn">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">🔒</div>
+            <h2>Verify Password</h2>
+            <p>Enter your password to edit <span id="loginModalUsername" class="modal-username"></span>.</p>
+            <div class="modal-form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" class="modal-input" placeholder="Enter password...">
+            </div>
+            <div class="modal-actions">
+                <button id="loginCancel" class="btn btn-secondary">👁️ View Only</button>
+                <button id="loginVerify" class="btn">Unlock 🔑</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase JS Integration & Interactivity Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCoRF9ocNSBioKic-I2DJ7aEtPssDg0E7w",
+            authDomain: "embeddedskilltree.firebaseapp.com",
+            projectId: "embeddedskilltree",
+            storageBucket: "embeddedskilltree.firebasestorage.app",
+            messagingSenderId: "882992766556",
+            appId: "1:882992766556:web:2cd846309e8af0a3f35099"
+        };
+
+        // Initialize Firestore
+        const db = getFirestore(initializeApp(firebaseConfig));
+        const auth = getAuth();
+
+        // Local State
+        let appData = { progress: {}, username: '' };
+        let activeSnapshotUnsubscribe = null;
+        let isAuthenticated = false;
+        let isReadOnly = false;
+        let isPasswordVerified = false;
+
+        // Map skill text keywords to Lucide icon names - matched to reference PNG icons
+        const skillIconMap = {
+            // --- Advanced Tier ---
+            "ci/cd system": "rocket",                  // A box with a rocket launching out of it
+            "ci/cd": "rocket",                          // CI/CD
+            "arduino library": "library",               // A stack of three books
+            "low current circuit": "battery",           // A battery with a magnifying glass
+            "battery management": "battery",            // battery management
+            "datasheet specifications": "file-text",    // A document page
+            "write a datasheet": "file-text",           // A document page
+            "datasheet": "file-text",                   // datasheet
+            "edit binary": "pencil",                    // A pencil
+            "linker file": "link",                      // Chain links
+            "49-day reboot": "calendar",                // A calendar page
+            "49-day": "calendar",                       // 49-day
+            "machine learning": "brain",                // A brain with circuit nodes
+            "tinyml": "brain",                          // TinyML
+            "trace debugging": "monitor",               // A computer monitor displaying a bug
+            "release process": "lock",                  // A padlock locked over a file folder/box
+            "dashboard": "gauge",                       // A gauge or speedometer
+            "programming and testing": "network",       // An octopus (represented by network)
+            "custom pcb": "layout",                     // A microchip / printed circuit board
+            "design and order": "layout",               // PCB layout
+
+            // --- Intermediate Tier ---
+            "bit bang": "alert-circle",                 // An exclamation mark (!)
+            "teach a class": "presentation",            // A whiteboard teacher
+            "ble gatt": "bluetooth",                    // Bluetooth
+            "multi core": "cpu",                        // A microchip containing two inner squares (cores)
+            "assembly code": "code",                    // Code brackets </>
+            "multiple architectures": "git-branch",     // Central node to branching nodes
+            ".map file": "file-search",                 // Magnifying glass over a document
+            ".lst": "file-search",                      // Magnifying glass over a document
+            "blow fuses": "bomb",                       // An exploding firecracker / bomb
+            "adapt rtos": "check-square",               // A microcontroller board with a checkmark
+            "logic analyzer": "binary",                 // A logic analyzer (binary stream representation)
+            "dma": "zap",                               // DMA
+            "memory access": "zap",                     // DMA
+            "reverse engineer": "eye",                  // A mechanical gear with an eye inside
+            "hard fault": "wrench",                     // crossed wrench and screwdriver
+            "sandbox": "package",                       // A sandbox
+            "test software": "factory",                 // factory building
+            "cross compiler": "wrench",                 // crossed wrench and screwdriver
+            "mutex": "handshake",                       // Two hands shaking
+
+            // --- Basics Tier ---
+            "uses more than 2 pointers": "circle-dot",   // A dotted circle or ring
+            "sleep in a low": "bed",                    // A bed with "zZ" sleeping symbols
+            "firmware remotely (ota": "cloud-download",  // A cloud with a downward download arrow
+            "usb hid": "usb",                           // A USB connector plug
+            "display text": "type",                     // Aa
+            "closed loop": "refresh-cw",                // A gear surrounded by circular arrows
+            "pid": "refresh-cw",                        // PID
+            "interrupt service": "hand",                // A hand pushing a button
+            "fast fourier": "trending-up",              // waveform peak
+            "fft": "trending-up",                       // FFT
+            "step-through": "bug",                      // A bug under a magnifying glass
+            "step- through": "bug",                     // A bug under a magnifying glass
+            "bluetooth low energy": "bluetooth",        // Bluetooth
+            "ble": "bluetooth",                         // Bluetooth
+            "pwm to control rgb": "sun",                // A sun or light-emitting symbol with waves
+            "move a motor": "rotate-cw",                // motor block
+            "rtos": "timer",                            // stopwatch / timer
+            "real time operating": "timer",             // RTOS
+            "erase and rewrite": "eraser",              // A microchip with an eraser on top
+            "use a circular buffer": "refresh-cw",      // A circle made of directional arrows
+            "circular buffer": "refresh-cw",            // circular buffer
+            "timer": "clock",                           // stopwatch
+            "cloud": "cloud",                           // cloud outline
+            "pulse width modulation": "waves",          // waves
+            "debounce": "hand",                         // A hand pushing a button
+            "state machine": "bot",                     // robot head
+            "continuity": "volume-2",                   // multimeter (beepy mode!)
+            "analog to digital": "activity",            // ADC waveform
+            "i2c": "git-commit",                        // Three connected nodes on a line
+            "uart": "arrow-left-right",                 // Two teardrop nodes communicating with arrows
+            "spi": "arrow-right-left",                  // Three dots with right-pointing arrows
+            "version control": "git-branch",            // Git commit / branch
+            "repl": "terminal",                         // REPL (Python snakes)
+            "blink": "lightbulb",                       // LED component / blink
+            "arduino": "party-popper",                  // Party popper
+            "solder": "flame",                          // Soldering iron tip
+            "wokwi": "laptop",                          // Wokwi / hardware simulator
+            "simulator": "laptop",                      // simulator
+
+            // --- Additional Matching ---
+            "camera": "camera",                         // camera
+            "sensor fusion": "box",                     // sensor fusion (3D box)
+            "firmware encryption": "wifi",              // Wi-Fi padlock
+            "power profiling": "battery",               // battery power
+            "iot protocol": "cloud",                    // IoT cloud
+            "memory corruption": "shield-alert",        // memory corruption
+            "mechanical actuator": "settings",          // mechanical actuator
+            "https": "globe",                           // HTTPS
+            "bring up a custom": "cake",                // birthday cake
+            "emi/emc": "shield",                        // EMI/EMC compliance
+            "secure boot": "lock",                      // secure boot
+            "automated hardware": "check-square",       // checkmark
+            "burden voltage": "alert-triangle",         // burden voltage
+            "production-": "cog",                       // test fixture
+            "oscilloscope": "activity"                  // oscilloscope screen displaying a waveform
+        };
+
+        // Check SVG Elements & Setup Dynamic Score Counter
+        const scoreGroup = document.getElementById('score');
+        if (scoreGroup) {
+            let scoreValText = document.getElementById('score-val');
+            if (!scoreValText) {
+                scoreValText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                scoreValText.setAttribute('id', 'score-val');
+                scoreValText.setAttribute('transform', 'translate(798 1098)');
+                scoreValText.setAttribute('font-family', 'Hansief, Arial, sans-serif');
+                scoreValText.setAttribute('font-size', '28');
+                scoreValText.setAttribute('font-weight', 'bold');
+                scoreValText.setAttribute('text-anchor', 'middle');
+                scoreValText.setAttribute('fill', 'var(--svg-text-dark)');
+                scoreValText.textContent = '0';
+                scoreGroup.appendChild(scoreValText);
+            }
+        }
+
+        // Clean up SVG: Hide credits & name fields programmatically on load
+        function cleanSVGLayout() {
+            // Hide the Name outline and the spelling letters
+            const nameLine = document.querySelector('line[x1="126.23"][y1="1137.53"]');
+            if (nameLine) {
+                nameLine.style.display = 'none';
+                let sibling = nameLine.previousElementSibling;
+                for (let i = 0; i < 5 && sibling; i++) {
+                    sibling.style.display = 'none';
+                    sibling = sibling.previousElementSibling;
+                }
+            }
+
+            // Setup credits element for quote (inside the bottom black banner)
+            const creditsId = document.getElementById('credits');
+            if (creditsId) {
+                creditsId.style.display = 'block';
+                creditsId.style.setProperty('fill', '#ffffff', 'important');
+                creditsId.style.setProperty('font-family', 'Hansief, Arial, sans-serif', 'important');
+                creditsId.style.setProperty('font-weight', 'bold', 'important');
+                creditsId.style.setProperty('font-size', '14px', 'important');
+                creditsId.style.setProperty('letter-spacing', '2px', 'important');
+                creditsId.setAttribute('transform', 'translate(0, 0)');
+                const tspanEl = creditsId.querySelector('tspan');
+                if (tspanEl) {
+                    tspanEl.setAttribute('y', '1177');
+                }
+            }
+
+            // Hide general text labels (excluding the credits element which we use for quote banner)
+            const textElements = document.querySelectorAll('text');
+            textElements.forEach(el => {
+                if (el.id === 'credits') return;
+                const txt = el.textContent || '';
+                if (txt.includes('Icons by Icons8.com') || 
+                    txt.includes('CC BY-NC-SA 4.0') || 
+                    txt.includes('MakerSkillTree')) {
+                    el.style.display = 'none';
+                }
+            });
+
+            // Make "ADVANCED" text on left arrow white so it's readable against the black gradient
+            const cls3Paths = document.querySelectorAll('path.cls-3');
+            cls3Paths.forEach(path => {
+                const bbox = path.getBBox();
+                if (bbox.x < 70 && bbox.y < 400) {
+                    path.style.setProperty('fill', '#ffffff', 'important');
+                }
+            });
+
+            // Hide the redundant bottom right SVG score box and "1 tile = 1 point" text
+            const scoreGroup = document.getElementById('score');
+            if (scoreGroup) {
+                scoreGroup.style.display = 'none';
+            }
+        }
+
+        // Dynamic rendering of Lucide SVG icons inside hexagons based on spatial positions
+        function renderHexagonIcons() {
+            const tiles = document.querySelectorAll('.cls-12');
+            const texts = document.querySelectorAll('.textbox-inner');
+            
+            // Sort keywords by length descending to avoid partial matching overlaps (e.g. "ble" in "troubleshoot")
+            const sortedKeywords = Object.keys(skillIconMap).sort((a, b) => b.length - a.length);
+            
+            tiles.forEach((tile) => {
+                const bbox = tile.getBBox();
+                const cx = bbox.x + bbox.width / 2;
+                const cy = bbox.y + bbox.height / 2;
+                
+                // Find matching text element by proximity
+                let matchedTextEl = null;
+                let minDist = 9999;
+                
+                texts.forEach((textEl) => {
+                    const tx = parseFloat(textEl.getAttribute('x') || 0);
+                    const ty = parseFloat(textEl.getAttribute('y') || 0);
+                    const dist = Math.sqrt(Math.pow(tx - cx, 2) + Math.pow(ty - bbox.y, 2));
+                    
+                    if (dist < minDist && dist < 40) {
+                        minDist = dist;
+                        matchedTextEl = textEl;
+                    }
+                });
+                
+                if (matchedTextEl) {
+                    // Extract text content
+                    const text = matchedTextEl.textContent.toLowerCase();
+                    
+                    // Find matching icon keyword
+                    let iconName = "cpu"; // default fallback icon
+                    for (const keyword of sortedKeywords) {
+                        // Check if the keyword is purely alphanumeric/word characters
+                        const isWord = /^[a-z0-9_]+$/i.test(keyword);
+                        if (isWord) {
+                            // Match with word boundaries
+                            const regex = new RegExp('\\b' + keyword + '\\b', 'i');
+                            if (regex.test(text)) {
+                                iconName = skillIconMap[keyword];
+                                break;
+                            }
+                        } else {
+                            // Substring matching for patterns with punctuation/spaces
+                            if (text.includes(keyword)) {
+                                iconName = skillIconMap[keyword];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Create foreignObject for Lucide icon
+                    const foreignObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+                    foreignObj.setAttribute('x', (cx - 12).toString());
+                    // Positioned at the bottom: 30px above the bottom edge of the hexagon
+                    foreignObj.setAttribute('y', (bbox.y + bbox.height - 32).toString()); 
+                    foreignObj.setAttribute('width', '24');
+                    foreignObj.setAttribute('height', '24');
+                    foreignObj.setAttribute('style', 'pointer-events: none;');
+                    
+                    // Inner div in HTML namespace
+                    const div = document.createElement('div');
+                    div.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+                    div.style.width = '100%';
+                    div.style.height = '100%';
+                    div.style.display = 'flex';
+                    div.style.alignItems = 'center';
+                    div.style.justifyContent = 'center';
+                    div.style.pointerEvents = 'none';
+                    
+                    const iconEl = document.createElement('i');
+                    iconEl.setAttribute('data-lucide', iconName);
+                    iconEl.style.width = '20px';
+                    iconEl.style.height = '20px';
+                    iconEl.style.stroke = 'var(--svg-text-dark)';
+                    iconEl.style.strokeWidth = '2';
+                    iconEl.style.transition = 'stroke 0.2s ease';
+                    iconEl.className = 'hex-icon';
+                    
+                    div.appendChild(iconEl);
+                    foreignObj.appendChild(div);
+                    
+                    // Insert before the text element in the SVG DOM so it layers properly
+                    tile.parentNode.insertBefore(foreignObj, tile.nextSibling);
+
+                    // Reset text block coordinate to original natural top position (no downward shifting)
+                    const originalY = parseFloat(matchedTextEl.getAttribute('data-original-y') || matchedTextEl.getAttribute('y'));
+                    matchedTextEl.setAttribute('y', originalY.toString());
+                }
+            });
+            
+            // Create the Lucide icons
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        }
+        
+        // Run SVG layout cleanup and icon creation
+        cleanSVGLayout();
+        renderHexagonIcons();
+
+        // Gather all hexagon path tiles
+        const tiles = document.querySelectorAll('.cls-12');
+        const totalTilesCount = tiles.length;
+
+        // Add Click interactions to hexagons
+        tiles.forEach((tile) => {
+            tile.onclick = () => {
+                if (isReadOnly) {
+                    showToast('🔒 This is a view-only session. Click "Unlock" next to the username input to edit.', '#f59e0b');
+                    return;
+                }
+                const id = tile.id;
+                if (!id) return;
+                
+                appData.progress[id] = !appData.progress[id];
+                updateVisualState();
+                
+                if (appData.username) {
+                    saveToFirebase();
+                } else {
+                    // Update localStorage for local-only state
+                    localStorage.setItem('local_progress', JSON.stringify(appData.progress));
+                }
+            };
+        });
+
+        // Initialize Anonymous Auth
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                try {
+                    await signInAnonymously(auth);
+                } catch (e) {
+                    console.error("Firebase Auth Error", e);
+                    isAuthenticated = false;
+                    const statusBadge = document.getElementById('syncStatus');
+                    statusBadge.textContent = "Auth Disabled";
+                    statusBadge.className = "status-badge local";
+                    showToast('⚠️ Firebase Auth not enabled. Enable Anonymous Auth in your Firebase Console → Authentication → Sign-in method.', '#f59e0b');
+                }
+            } else {
+                isAuthenticated = true;
+                // Parse user from query parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryUser = urlParams.get('user') || urlParams.get('username');
+                
+                if (queryUser) {
+                    const cleanUser = queryUser.trim();
+                    document.getElementById('username').value = cleanUser;
+                    appData.username = cleanUser;
+                    connectToUserSync(cleanUser, true);
+                } else {
+                    // Load local progress if any
+                    const savedLocal = localStorage.getItem('local_progress');
+                    if (savedLocal) {
+                        appData.progress = JSON.parse(savedLocal);
+                    }
+                    updateVisualState();
+                }
+            }
+        });
+
+        // Hash password helper using browser native Crypto API (SHA-256)
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Check if user exists, then either load or show register modal
+        async function connectToUserSync(username, isUrlQuery = false) {
+            // Guard: check if Firebase Auth is ready
+            if (!isAuthenticated) {
+                showToast('⚠️ Firebase not connected. Please enable Anonymous Auth in your Firebase Console.', '#f59e0b');
+                const statusBadge = document.getElementById('syncStatus');
+                statusBadge.textContent = "Auth Disabled";
+                statusBadge.className = "status-badge local";
+                return;
+            }
+
+            // Unsubscribe from previous listener if active
+            if (activeSnapshotUnsubscribe) {
+                activeSnapshotUnsubscribe();
+                activeSnapshotUnsubscribe = null;
+            }
+
+            const statusBadge = document.getElementById('syncStatus');
+            statusBadge.textContent = "Looking up...";
+            statusBadge.className = "status-badge syncing";
+
+            const docId = username.toUpperCase().replace(/\s+/g, '_');
+            const docRef = doc(db, 'skilltrees', docId);
+
+            try {
+                const snapshot = await getDoc(docRef);
+                
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    if (isUrlQuery) {
+                        // View-only mode for URL share link
+                        isReadOnly = true;
+                        isPasswordVerified = false;
+                        appData.username = username;
+                        appData.progress = data.progress || {};
+                        updateVisualState();
+                        showToast(`Viewing public profile: ${username}`, '#03a9f4');
+                    } else {
+                        // Prompt to unlock manually typed username
+                        showLoginModal(username, data.passwordHash, data.progress || {});
+                    }
+                } else {
+                    if (isUrlQuery) {
+                        showToast(`Profile ${username} not found.`, '#ef4444');
+                        statusBadge.textContent = "Not Found";
+                        statusBadge.className = "status-badge local";
+                    } else {
+                        // Prompt to register new username
+                        showRegisterModal(username);
+                    }
+                }
+            } catch (error) {
+                console.error("Firestore Lookup Error", error);
+                statusBadge.textContent = "Sync Error";
+                statusBadge.className = "status-badge local";
+                showToast('Connection error. Check Firebase Auth settings.', '#ef4444');
+            }
+        }
+
+        // Subscribe to real-time Firestore updates for an existing user
+        function subscribeToUser(username, docRef) {
+            activeSnapshotUnsubscribe = onSnapshot(docRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    // Sync progress data
+                    appData.progress = data.progress || {};
+                    appData.username = username;
+                }
+                updateVisualState();
+            }, (error) => {
+                console.error("Firestore Listen Error", error);
+            });
+        }
+
+        // Register a new user by creating their Firestore document
+        async function registerNewUser(username, passwordHash) {
+            const statusBadge = document.getElementById('syncStatus');
+            statusBadge.textContent = "Registering...";
+            statusBadge.className = "status-badge syncing";
+
+            const docId = username.toUpperCase().replace(/\s+/g, '_');
+            const docRef = doc(db, 'skilltrees', docId);
+
+            try {
+                appData.username = username;
+                appData.progress = {};
+                isReadOnly = false;
+                isPasswordVerified = true;
+
+                await setDoc(docRef, { 
+                    username: username, 
+                    passwordHash: passwordHash,
+                    progress: {} 
+                });
+
+                // Now subscribe to real-time updates
+                subscribeToUser(username, docRef);
+                showToast(`Secured and registered as ${username}!`, '#10b981');
+                updateVisualState();
+            } catch (error) {
+                console.error("Firestore Registration Error", error);
+                statusBadge.textContent = "Error";
+                statusBadge.className = "status-badge local";
+                showToast('Registration failed. Please try again.', '#ef4444');
+            }
+        }
+
+        // Show the registration modal
+        function showRegisterModal(username) {
+            const modal = document.getElementById('registerModal');
+            document.getElementById('modalUsername').textContent = username;
+            const passInput = document.getElementById('regPassword');
+            const confirmInput = document.getElementById('regConfirmPassword');
+            passInput.value = '';
+            confirmInput.value = '';
+            modal.classList.add('active');
+
+            const registerBtn = document.getElementById('modalRegister');
+            const cancelBtn = document.getElementById('modalCancel');
+
+            const onRegister = async () => {
+                const password = passInput.value;
+                const confirmPassword = confirmInput.value;
+                
+                if (password.length < 6) {
+                    showToast('Password must be at least 6 characters.', '#f59e0b');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showToast('Passwords do not match.', '#f59e0b');
+                    return;
+                }
+                
+                modal.classList.remove('active');
+                const passwordHash = await hashPassword(password);
+                registerNewUser(username, passwordHash);
+                cleanup();
+            };
+
+            const onCancel = () => {
+                modal.classList.remove('active');
+                appData.username = '';
+                const statusBadge = document.getElementById('syncStatus');
+                statusBadge.textContent = "Offline Session";
+                statusBadge.className = "status-badge local";
+                updateVisualState();
+                cleanup();
+            };
+
+            const cleanup = () => {
+                registerBtn.removeEventListener('click', onRegister);
+                cancelBtn.removeEventListener('click', onCancel);
+                confirmInput.removeEventListener('keydown', onKeyDown);
+            };
+
+            const onKeyDown = (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    onRegister();
+                }
+            };
+
+            registerBtn.addEventListener('click', onRegister);
+            cancelBtn.addEventListener('click', onCancel);
+            confirmInput.addEventListener('keydown', onKeyDown);
+            passInput.focus();
+        }
+
+        // Show the login password modal
+        function showLoginModal(username, storedHash, progressData) {
+            const modal = document.getElementById('loginModal');
+            document.getElementById('loginModalUsername').textContent = username;
+            const passwordInput = document.getElementById('loginPassword');
+            passwordInput.value = '';
+            modal.classList.add('active');
+
+            const verifyBtn = document.getElementById('loginVerify');
+            const cancelBtn = document.getElementById('loginCancel');
+
+            const onVerify = async () => {
+                const password = passwordInput.value;
+                if (!password) {
+                    showToast('Please enter your password.', '#f59e0b');
+                    return;
+                }
+                const enteredHash = await hashPassword(password);
+                if (enteredHash === storedHash) {
+                    modal.classList.remove('active');
+                    isReadOnly = false;
+                    isPasswordVerified = true;
+                    appData.username = username;
+                    appData.progress = progressData;
+                    
+                    const docId = username.toUpperCase().replace(/\s+/g, '_');
+                    const docRef = doc(db, 'skilltrees', docId);
+                    subscribeToUser(username, docRef);
+                    
+                    showToast(`Profile unlocked! Editing enabled.`, '#10b981');
+                    updateVisualState();
+                    cleanup();
+                } else {
+                    showToast('Incorrect password!', '#ef4444');
+                }
+            };
+
+            const onViewOnly = () => {
+                modal.classList.remove('active');
+                isReadOnly = true;
+                isPasswordVerified = false;
+                appData.username = username;
+                appData.progress = progressData;
+                
+                showToast(`Viewing ${username} (View Only)`, '#03a9f4');
+                updateVisualState();
+                cleanup();
+            };
+
+            const cleanup = () => {
+                verifyBtn.removeEventListener('click', onVerify);
+                cancelBtn.removeEventListener('click', onViewOnly);
+                passwordInput.removeEventListener('keydown', onKeyDown);
+            };
+
+            const onKeyDown = (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    onVerify();
+                }
+            };
+
+            verifyBtn.addEventListener('click', onVerify);
+            cancelBtn.addEventListener('click', onViewOnly);
+            passwordInput.addEventListener('keydown', onKeyDown);
+            passwordInput.focus();
+        }
+
+        // Save State to Firestore (secured via merge logic to avoid overwriting passwordHash)
+        async function saveToFirebase() {
+            if (!appData.username || isReadOnly) return;
+            const docId = appData.username.toUpperCase().replace(/\s+/g, '_');
+            try {
+                await setDoc(doc(db, 'skilltrees', docId), { progress: appData.progress }, { merge: true });
+            } catch (e) {
+                console.error("Firestore Save Error", e);
+            }
+        }
+
+        // Update UI states
+        function updateVisualState() {
+            let completedCount = 0;
+            
+            tiles.forEach((tile) => {
+                const id = tile.id;
+                const isCompleted = !!appData.progress[id];
+                
+                // Find icon in next sibling
+                let next = tile.nextSibling;
+                let iconEl = null;
+                while (next) {
+                    if (next.tagName === 'foreignObject') {
+                        iconEl = next.querySelector('.hex-icon');
+                        break;
+                    }
+                    next = next.nextSibling;
+                }
+                
+                if (isCompleted) {
+                    tile.classList.add('completed');
+                    if (iconEl) {
+                        iconEl.style.stroke = '#ffffff'; // White icon stroke for completed tiles
+                    }
+                    completedCount++;
+                } else {
+                    tile.classList.remove('completed');
+                    if (iconEl) {
+                        iconEl.style.stroke = 'var(--svg-text-dark)'; // Dark icon stroke
+                    }
+                }
+            });
+
+            // Update Progress Display
+            const percent = totalTilesCount > 0 ? Math.round((completedCount / totalTilesCount) * 100) : 0;
+            document.getElementById('progressCount').textContent = `${completedCount}/${totalTilesCount} (${percent}%)`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+
+            // Update Score display inside SVG
+            const scoreValText = document.getElementById('score-val');
+            if (scoreValText) {
+                scoreValText.textContent = completedCount.toString();
+            }
+
+            // Update sync button and status badge
+            const statusBadge = document.getElementById('syncStatus');
+            const syncBtn = document.getElementById('syncBtn');
+            if (appData.username) {
+                if (isReadOnly) {
+                    statusBadge.textContent = "View Only 🔒";
+                    statusBadge.className = "status-badge locked";
+                    syncBtn.textContent = "Unlock 🔑";
+                } else {
+                    statusBadge.textContent = "Synced 🔓";
+                    statusBadge.className = "status-badge synced";
+                    syncBtn.textContent = "Lock 🔒";
+                }
+            } else {
+                statusBadge.textContent = "Offline Session";
+                statusBadge.className = "status-badge local";
+                syncBtn.textContent = "Enter →";
+            }
+        }
+
+        // Sync button and username input logic
+        const usernameInput = document.getElementById('username');
+        const syncBtn = document.getElementById('syncBtn');
+
+        function triggerSync() {
+            const usernameVal = usernameInput.value.trim();
+            
+            if (usernameVal) {
+                if (usernameVal !== appData.username) {
+                    appData.username = usernameVal;
+                    // Update URL search query without reloading
+                    const newUrl = `${window.location.origin}${window.location.pathname}?user=${encodeURIComponent(usernameVal)}`;
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
+                    connectToUserSync(usernameVal, false);
+                } else {
+                    // Clicked on the SAME username: toggle lock/unlock
+                    if (isReadOnly) {
+                        connectToUserSync(usernameVal, false); // triggers login verify modal
+                    } else {
+                        // Lock it
+                        isReadOnly = true;
+                        isPasswordVerified = false;
+                        if (activeSnapshotUnsubscribe) {
+                            activeSnapshotUnsubscribe();
+                            activeSnapshotUnsubscribe = null;
+                        }
+                        showToast('🔒 Session locked to View Only.', '#f59e0b');
+                        updateVisualState();
+                    }
+                }
+            } else {
+                // Disconnect from sync
+                if (activeSnapshotUnsubscribe) {
+                    activeSnapshotUnsubscribe();
+                    activeSnapshotUnsubscribe = null;
+                }
+                appData.username = '';
+                isReadOnly = false;
+                isPasswordVerified = false;
+                
+                // Clear URL parameter
+                const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+                window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+
+                const statusBadge = document.getElementById('syncStatus');
+                statusBadge.textContent = "Offline Session";
+                statusBadge.className = "status-badge local";
+                
+                // Load local progress
+                const savedLocal = localStorage.getItem('local_progress');
+                appData.progress = savedLocal ? JSON.parse(savedLocal) : {};
+                updateVisualState();
+            }
+        }
+
+        // Sync button click
+        syncBtn.onclick = triggerSync;
+
+        // Also trigger sync on Enter key press
+        usernameInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                triggerSync();
+            }
+        };
+
+        // Reset progress function
+        document.getElementById('resetBtn').onclick = () => {
+            if (isReadOnly && appData.username) {
+                showToast('🔒 This is a view-only session. Click "Unlock" next to the username input to edit.', '#f59e0b');
+                return;
+            }
+            if (confirm("Are you sure you want to clear your skill progress? This cannot be undone.")) {
+                appData.progress = {};
+                updateVisualState();
+                
+                if (appData.username) {
+                    saveToFirebase();
+                } else {
+                    localStorage.removeItem('local_progress');
+                }
+            }
+        };
+
+        // Reusable toast helper with configurable message and color
+        function showToast(message, bgColor = '#10b981') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = bgColor;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Share Link Copy
+        document.getElementById('copyShareBtn').onclick = () => {
+            const currentUsername = usernameInput.value.trim();
+            if (!currentUsername) {
+                showToast('Please enter a Username first!', '#f59e0b');
+                usernameInput.focus();
+                return;
+            }
+            
+            const shareUrl = `${window.location.origin}${window.location.pathname}?user=${encodeURIComponent(currentUsername)}`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showToast('Share link copied to clipboard!');
+            });
+        };
+        // Rotating Motivational Quotes
+        const embeddedQuotes = [
+            "NOW OR NEVER",
+            "BUILD OR DIE",
+            "HARDWARE IS HARD",
+            "KEEP BUILDING",
+            "START HERE, GO ANYWHERE",
+            "CODE THE FUTURE",
+            "EMBEDDED IS LIFE",
+            "NO RISK, NO GLORY",
+            "DO OR DO NOT",
+            "FOCUS ON THE GOAL",
+            "CHASING EXCELLENCE",
+            "STAY CURIOUS",
+            "MAKE IT WORK",
+            "MASTER THE BASICS",
+            "SOLVE THE PROBLEM"
+        ];
+        
+        let quoteIndex = Math.floor(Math.random() * embeddedQuotes.length);
+        // Target the tspan inside credits (within the SVG banner box)
+        const quoteEl = document.querySelector('#credits tspan') || document.getElementById('credits');
+        
+        function rotateQuote() {
+            quoteIndex = (quoteIndex + 1) % embeddedQuotes.length;
+            if (quoteEl) {
+                quoteEl.style.opacity = '0';
+                setTimeout(() => {
+                    quoteEl.textContent = embeddedQuotes[quoteIndex];
+                    quoteEl.style.opacity = '1';
+                }, 400);
+            }
+        }
+        
+        // Set initial random quote
+        if (quoteEl) {
+            quoteEl.textContent = embeddedQuotes[quoteIndex];
+            // Add style for transition
+            quoteEl.style.transition = 'opacity 0.4s ease';
+        }
+        
+        // Rotate every 8 seconds
+        setInterval(rotateQuote, 8000);
+
+    </script>
+</body>
+</html>
