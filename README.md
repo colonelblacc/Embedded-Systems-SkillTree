@@ -94,3 +94,23 @@ If you are receiving pull requests or hosting this repository, keep the followin
 *   **Original Concept & Design**: Based on the [MakerSkillTree](https://github.com/sjpiper145/MakerSkillTree) by [sjpiper145](https://github.com/sjpiper145).
 *   **License**: Licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
+---
+
+## 🗂️ Examples — Hands-On Code Guide
+
+The `Examples/` folder contains working C code examples that pair directly with skills on the tree. Each example is self-contained with its own `README.md` explaining the concept, how to build it, and how it connects to embedded systems practice.
+
+| Folder | Topic | Concept |
+|---|---|---|
+| [`Examples/Ring Buffer/`](Examples/Ring%20Buffer/) | Data Structures | Circular buffer / FIFO queue with wrap-around pointer logic |
+| [`Examples/SPI INTERFACE/`](Examples/SPI%20INTERFACE/) | Communication Protocols | SPI peripheral interface |
+
+### How to Use the Examples
+1. Browse the skill tree at [colonelblacc.github.io/Embedded-Systems-SkillTree](https://colonelblacc.github.io/Embedded-Systems-SkillTree)
+2. Find a skill you want to learn or practise
+3. Navigate to the matching folder in `Examples/`
+4. Read the `README.md` inside, then build and run the code
+
+> More examples will be added as the skill tree grows.
+
+
